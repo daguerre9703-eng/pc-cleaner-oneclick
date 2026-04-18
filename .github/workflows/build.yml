@@ -1,0 +1,28 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller openai
+    - name: Build EXE
+      run: |
+        pyinstaller --onefile --noconsole --name "AI_PC_Cleaner_Final" main.py
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: AI_PC_Cleaner_EXE
+        path: dist/AI_PC_Cleaner_Final.exe
